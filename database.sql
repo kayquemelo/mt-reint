@@ -130,6 +130,22 @@ CREATE TABLE IF NOT EXISTS "modulo" (
 
 
 
+
+CREATE TABLE IF NOT EXISTS "auditoria_evento" (
+	"id" UUID NOT NULL UNIQUE,
+	"tabela" VARCHAR(255) NOT NULL,
+	"operacao" VARCHAR(255) NOT NULL,
+	"registro_id" UUID NOT NULL,
+	"usuario_id" UUID NOT NULL,
+	"entidade_id" UUID NOT NULL,
+	"registro_anterior" JSONB NOT NULL,
+	"registro_novo" JSONB NOT NULL,
+	"created_at" TIMESTAMP NOT NULL,
+	PRIMARY KEY("id")
+);
+
+
+
 ALTER TABLE "usuario_perfil"
 ADD FOREIGN KEY("usuario_id") REFERENCES "usuario"("id")
 ON UPDATE NO ACTION ON DELETE NO ACTION;
@@ -149,5 +165,11 @@ ALTER TABLE "rbac_permissao"
 ADD FOREIGN KEY("modulo_id") REFERENCES "modulo"("id")
 ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE "rbac_papel"
+ADD FOREIGN KEY("entidade_id") REFERENCES "entidade"("id")
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE "auditoria_evento"
+ADD FOREIGN KEY("usuario_id") REFERENCES "usuario"("id")
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE "auditoria_evento"
 ADD FOREIGN KEY("entidade_id") REFERENCES "entidade"("id")
 ON UPDATE NO ACTION ON DELETE NO ACTION;
