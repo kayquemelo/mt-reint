@@ -11,6 +11,7 @@
 	- [rbac_papel_permissao](#rbac_papel_permissao)
 	- [rbac_permissao](#rbac_permissao)
 	- [modulo](#modulo)
+	- [auditoria_evento](#auditoria_evento)
 - [Relationships](#relationships)
 - [Database Diagram](#database-diagram)
 
@@ -145,6 +146,21 @@ Tabela para armazenar os perfis do usuário.
 | **deleted_by** | UUID | null |  | | 
 
 
+### auditoria_evento
+
+| Name        | Type          | Settings                      | References                    | Note                           |
+|-------------|---------------|-------------------------------|-------------------------------|--------------------------------|
+| **id** | UUID | 🔑 PK, not null, unique |  | |
+| **tabela** | VARCHAR(255) | not null |  | |
+| **operacao** | VARCHAR(255) | not null |  | |
+| **registro_id** | UUID | not null |  | |
+| **usuario_id** | UUID | not null | fk_auditoria_evento_usuario_id_usuario | |
+| **entidade_id** | UUID | not null | fk_auditoria_evento_entidade_id_entidade | |
+| **registro_anterior** | JSONB | not null |  | |
+| **registro_novo** | JSONB | not null |  | |
+| **created_at** | TIMESTAMP | not null |  | | 
+
+
 ## Relationships
 
 - **usuario_perfil to usuario**: many_to_one
@@ -154,6 +170,8 @@ Tabela para armazenar os perfis do usuário.
 - **rbac_papel_permissao to rbac_permissao**: many_to_one
 - **rbac_permissao to modulo**: many_to_one
 - **rbac_papel to entidade**: many_to_one
+- **auditoria_evento to usuario**: many_to_one
+- **auditoria_evento to entidade**: many_to_one
 
 ## Database Diagram
 
@@ -166,6 +184,8 @@ erDiagram
 	rbac_papel_permissao }o--|| rbac_permissao : references
 	rbac_permissao }o--|| modulo : references
 	rbac_papel }o--|| entidade : references
+	auditoria_evento }o--|| usuario : references
+	auditoria_evento }o--|| entidade : references
 
 	entidade {
 		UUID id
@@ -268,5 +288,17 @@ erDiagram
 		UUID updated_by
 		TIMESTAMP deleted_at
 		UUID deleted_by
+	}
+
+	auditoria_evento {
+		UUID id
+		VARCHAR(255) tabela
+		VARCHAR(255) operacao
+		UUID registro_id
+		UUID usuario_id
+		UUID entidade_id
+		JSONB registro_anterior
+		JSONB registro_novo
+		TIMESTAMP created_at
 	}
 ```
