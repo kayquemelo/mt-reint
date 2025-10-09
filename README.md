@@ -61,7 +61,7 @@ Tabela utilizada para armazenar as tenants/filiais/unidades/empresas em hierarqu
 Tabela para armazenar os perfis do usuário.
 | Name        | Type          | Settings                      | References                    | Note                           |
 |-------------|---------------|-------------------------------|-------------------------------|--------------------------------|
-| **id** | INTEGER | 🔑 PK, not null, unique, autoincrement |  | |
+| **id** | UUID | 🔑 PK, not null, unique, autoincrement |  | |
 | **nome** | TEXT | null |  | |
 | **email** | TEXT | null |  | |
 | **descricao** | TEXT | null |  | |
@@ -188,7 +188,7 @@ erDiagram
 	}
 
 	usuario_perfil {
-		INTEGER id
+		UUID id
 		TEXT nome
 		TEXT email
 		TEXT descricao
