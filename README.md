@@ -48,7 +48,7 @@ Tabela utilizada para armazenar as tenants/filiais/unidades/empresas em hierarqu
 | **senha** | VARCHAR(255) | not null |  | |
 | **recuperacao** | VARCHAR(255) | null |  | |
 | **token** | VARCHAR(255) | null |  | |
-| **token_expires** | VARCHAR(255) | null |  | |
+| **token_expires** | TIMESTAMP | null |  | |
 | **ativo** | BOOLEAN | not null |  | |
 | **created_at** | TIMESTAMP | not null |  | |
 | **created_by** | UUID | not null |  | |
@@ -188,7 +188,7 @@ erDiagram
 		VARCHAR(255) senha
 		VARCHAR(255) recuperacao
 		VARCHAR(255) token
-		VARCHAR(255) token_expires
+		TIMESTAMP token_expires
 		BOOLEAN ativo
 		TIMESTAMP created_at
 		UUID created_by
