@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS "entidade" (
 	"descricao" TEXT,
 	-- UUID da entidade pai. caso seja uma entidade raiz, deixar como null.
 	"entidade_id" UUID,
+	"hostname" VARCHAR(255),
+	"ativo" BOOLEAN NOT NULL,
 	"created_at" TIMESTAMP NOT NULL,
 	"created_by" UUID NOT NULL,
 	"updated_at" TIMESTAMP,
@@ -39,13 +41,14 @@ CREATE TABLE IF NOT EXISTS "usuario" (
 CREATE TABLE IF NOT EXISTS "usuario_perfil" (
 	"id" UUID NOT NULL UNIQUE,
 	"nome" TEXT,
-	"email" TEXT,
+	"apelido" TEXT NOT NULL,
 	"descricao" TEXT,
 	"foto_path" TEXT,
 	"foto_capa_path" TEXT,
 	"usuario_id" UUID NOT NULL,
 	"entidade_id" UUID NOT NULL,
-	"papel_id" UUID,
+	"papel_id" UUID NOT NULL,
+	"ativo" BOOLEAN NOT NULL,
 	"created_at" TIMESTAMP NOT NULL,
 	"created_by" UUID NOT NULL,
 	"updated_at" TIMESTAMP,
@@ -62,6 +65,7 @@ CREATE TABLE IF NOT EXISTS "rbac_papel" (
 	"id" UUID NOT NULL UNIQUE,
 	"nome" VARCHAR(255) NOT NULL,
 	"descricao" TEXT,
+	"entidade_id" UUID NOT NULL,
 	"created_at" TIMESTAMP NOT NULL,
 	"created_by" UUID NOT NULL,
 	"updated_at" TIMESTAMP,
@@ -95,6 +99,7 @@ CREATE TABLE IF NOT EXISTS "rbac_permissao" (
 	"nome" VARCHAR(255) NOT NULL,
 	"descricao" TEXT,
 	"modulo_id" UUID NOT NULL,
+	"acao" VARCHAR(255) NOT NULL,
 	"created_at" TIMESTAMP NOT NULL,
 	"created_by" UUID NOT NULL,
 	"updated_at" TIMESTAMP,
@@ -111,6 +116,8 @@ CREATE TABLE IF NOT EXISTS "modulo" (
 	"id" UUID NOT NULL UNIQUE,
 	"nome" VARCHAR(255) NOT NULL,
 	"descricao" TEXT,
+	"versao" VARCHAR(255) NOT NULL,
+	"ativo" BOOLEAN NOT NULL,
 	"created_at" TIMESTAMP NOT NULL,
 	"created_by" UUID NOT NULL,
 	"updated_at" TIMESTAMP,
@@ -139,4 +146,7 @@ ADD FOREIGN KEY("permissao_id") REFERENCES "rbac_permissao"("id")
 ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE "rbac_permissao"
 ADD FOREIGN KEY("modulo_id") REFERENCES "modulo"("id")
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE "rbac_papel"
+ADD FOREIGN KEY("entidade_id") REFERENCES "entidade"("id")
 ON UPDATE NO ACTION ON DELETE NO ACTION;
