@@ -168,7 +168,7 @@ ALTER TABLE "rbac_papel"
 ADD FOREIGN KEY("entidade_id") REFERENCES "entidade"("id")
 ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE "auditoria_evento"
-ADD FOREIGN KEY("usuario_id") REFERENCES "usuario"("id")
+ADD FOREIGN KEY("usuario_id") REFERENCES "usuario_perfil"("id")
 ON UPDATE NO ACTION ON DELETE NO ACTION;
 ALTER TABLE "auditoria_evento"
 ADD FOREIGN KEY("entidade_id") REFERENCES "entidade"("id")
