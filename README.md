@@ -16,6 +16,8 @@
 
 ## Introduction
 
+- Banco de dados utilizado para aplicação multi filial com multplos módulos plugaveis em Angular + Spring boot + Postgres.
+
 ## Database type
 
 - **Database system:** PostgreSQL
