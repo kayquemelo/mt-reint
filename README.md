@@ -154,7 +154,7 @@ Tabela para armazenar os perfis do usuário.
 | **tabela** | VARCHAR(255) | not null |  | |
 | **operacao** | VARCHAR(255) | not null |  | |
 | **registro_id** | UUID | not null |  | |
-| **usuario_id** | UUID | not null | fk_auditoria_evento_usuario_id_usuario | |
+| **usuario_id** | UUID | not null | fk_auditoria_evento_usuario_id_usuario_perfil | |
 | **entidade_id** | UUID | not null | fk_auditoria_evento_entidade_id_entidade | |
 | **registro_anterior** | JSONB | not null |  | |
 | **registro_novo** | JSONB | not null |  | |
@@ -170,7 +170,7 @@ Tabela para armazenar os perfis do usuário.
 - **rbac_papel_permissao to rbac_permissao**: many_to_one
 - **rbac_permissao to modulo**: many_to_one
 - **rbac_papel to entidade**: many_to_one
-- **auditoria_evento to usuario**: many_to_one
+- **auditoria_evento to usuario_perfil**: many_to_one
 - **auditoria_evento to entidade**: many_to_one
 
 ## Database Diagram
@@ -184,7 +184,7 @@ erDiagram
 	rbac_papel_permissao }o--|| rbac_permissao : references
 	rbac_permissao }o--|| modulo : references
 	rbac_papel }o--|| entidade : references
-	auditoria_evento }o--|| usuario : references
+	auditoria_evento }o--|| usuario_perfil : references
 	auditoria_evento }o--|| entidade : references
 
 	entidade {
