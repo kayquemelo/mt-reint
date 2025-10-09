@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS "usuario" (
 	"senha" VARCHAR(255) NOT NULL,
 	"recuperacao" VARCHAR(255),
 	"token" VARCHAR(255),
-	"token_expires" VARCHAR(255),
+	"token_expires" TIMESTAMP,
 	"ativo" BOOLEAN NOT NULL,
 	"created_at" TIMESTAMP NOT NULL,
 	"created_by" UUID NOT NULL,
