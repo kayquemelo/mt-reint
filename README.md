@@ -11,7 +11,11 @@
 	- [rbac_papel_permissao](#rbac_papel_permissao)
 	- [rbac_permissao](#rbac_permissao)
 	- [modulo](#modulo)
+	- [dispositivo](#dispositivo)
+	- [dispositivo_perfil](#dispositivo_perfil)
 	- [auditoria_evento](#auditoria_evento)
+	- [auditoria_acesso](#auditoria_acesso)
+	- [modulo_entidade](#modulo_entidade)
 - [Relationships](#relationships)
 - [Database Diagram](#database-diagram)
 
@@ -27,10 +31,23 @@ Tabela utilizada para armazenar as tenants/filiais/unidades/empresas em hierarqu
 | Name        | Type          | Settings                      | References                    | Note                           |
 |-------------|---------------|-------------------------------|-------------------------------|--------------------------------|
 | **id** | UUID | 🔑 PK, not null, unique |  | |
-| **nome** | VARCHAR(255) | null |  | |
+| **codigo** | VARCHAR(255) | not null |  | |
+| **nome_social** | TEXT | not null |  | |
+| **nome_fantasia** | TEXT | null |  | |
+| **cnpj** | VARCHAR(255) | null |  | |
+| **cnes** | VARCHAR(255) | null |  | |
 | **descricao** | TEXT | null |  | |
-| **entidade_id** | UUID | null |  |UUID da entidade pai. caso seja uma entidade raiz, deixar como null. |
+| **entidade_id** | UUID | null | fk_entidade_entidade_id_entidade |UUID da entidade pai. caso seja uma entidade raiz, deixar como null. |
 | **hostname** | VARCHAR(255) | null |  | |
+| **limite_tenant** | INTEGER | null |  | |
+| **limite_usuario** | INTEGER | null |  | |
+| **cor_primaria** | VARCHAR(255) | null |  | |
+| **cor_secundaria** | VARCHAR(255) | null |  | |
+| **cor_terciaria** | VARCHAR(255) | null |  | |
+| **logo_path** | TEXT | null |  | |
+| **email_conta** | TEXT | null |  | |
+| **email_porta** | TEXT | null |  | |
+| **email_senha** | TEXT | null |  | |
 | **ativo** | BOOLEAN | not null |  | |
 | **created_at** | TIMESTAMP | not null |  | |
 | **created_by** | UUID | not null |  | |
@@ -146,6 +163,39 @@ Tabela para armazenar os perfis do usuário.
 | **deleted_by** | UUID | null |  | | 
 
 
+### dispositivo
+
+| Name        | Type          | Settings                      | References                    | Note                           |
+|-------------|---------------|-------------------------------|-------------------------------|--------------------------------|
+| **id** | UUID | 🔑 PK, not null, unique |  | |
+| **codigo** | VARCHAR(255) | not null |  | |
+| **nome** | VARCHAR(255) | not null |  | |
+| **descricao** | TEXT | not null |  | |
+| **qr_code** | TEXT | null |  | |
+| **ativo** | BOOLEAN | null |  | |
+| **created_at** | TIMESTAMP | not null |  | |
+| **created_by** | UUID | not null |  | |
+| **updated_at** | TIMESTAMP | null |  | |
+| **updated_by** | UUID | null |  | |
+| **deleted_at** | TIMESTAMP | null |  | |
+| **deleted_by** | UUID | null |  | | 
+
+
+### dispositivo_perfil
+
+| Name        | Type          | Settings                      | References                    | Note                           |
+|-------------|---------------|-------------------------------|-------------------------------|--------------------------------|
+| **id** | UUID | 🔑 PK, not null, unique |  | |
+| **perfil_id** | UUID | not null | fk_dispositivo_perfil_perfil_id_usuario_perfil | |
+| **dispositivo_id** | UUID | not null | fk_dispositivo_perfil_dispositivo_id_dispositivo | |
+| **created_at** | TIMESTAMP | not null |  | |
+| **created_by** | UUID | not null |  | |
+| **updated_at** | TIMESTAMP | null |  | |
+| **updated_by** | UUID | null |  | |
+| **deleted_at** | TIMESTAMP | null |  | |
+| **deleted_by** | UUID | null |  | | 
+
+
 ### auditoria_evento
 
 | Name        | Type          | Settings                      | References                    | Note                           |
@@ -156,9 +206,36 @@ Tabela para armazenar os perfis do usuário.
 | **registro_id** | UUID | not null |  | |
 | **usuario_id** | UUID | not null | fk_auditoria_evento_usuario_id_usuario_perfil | |
 | **entidade_id** | UUID | not null | fk_auditoria_evento_entidade_id_entidade | |
-| **registro_anterior** | JSONB | not null |  | |
-| **registro_novo** | JSONB | not null |  | |
+| **registro_anterior** | JSONB | null |  | |
+| **registro_novo** | JSONB | null |  | |
 | **created_at** | TIMESTAMP | not null |  | | 
+
+
+### auditoria_acesso
+
+| Name        | Type          | Settings                      | References                    | Note                           |
+|-------------|---------------|-------------------------------|-------------------------------|--------------------------------|
+| **id** | INTEGER | 🔑 PK, not null, unique, autoincrement |  | |
+| **usuario_id** | UUID | null | fk_auditoria_acessos_usuario_id_usuario | |
+| **perfil_id** | UUID | null | fk_auditoria_acessos_perfil_id_usuario_perfil | |
+| **user_agent** | JSONB | not null |  | |
+| **created_at** | TIMESTAMP | not null |  | | 
+
+
+### modulo_entidade
+
+| Name        | Type          | Settings                      | References                    | Note                           |
+|-------------|---------------|-------------------------------|-------------------------------|--------------------------------|
+| **id** | UUID | 🔑 PK, not null, unique |  | |
+| **modulo_id** | UUID | not null | fk_modulo_entidade_modulo_id_modulo | |
+| **entidade_id** | UUID | not null | fk_modulo_entidade_entidade_id_entidade | |
+| **ativo** | BOOLEAN | not null |  | |
+| **created_at** | TIMESTAMP | not null |  | |
+| **created_by** | UUID | not null |  | |
+| **updated_at** | TIMESTAMP | null |  | |
+| **updated_by** | UUID | null |  | |
+| **delete_at** | TIMESTAMP | null |  | |
+| **deleted_by** | UUID | null |  | | 
 
 
 ## Relationships
@@ -172,6 +249,13 @@ Tabela para armazenar os perfis do usuário.
 - **rbac_papel to entidade**: many_to_one
 - **auditoria_evento to usuario_perfil**: many_to_one
 - **auditoria_evento to entidade**: many_to_one
+- **dispositivo_perfil to dispositivo**: many_to_one
+- **dispositivo_perfil to usuario_perfil**: many_to_one
+- **auditoria_acesso to usuario**: many_to_one
+- **auditoria_acesso to usuario_perfil**: many_to_one
+- **entidade to entidade**: many_to_one
+- **modulo_entidade to modulo**: many_to_one
+- **modulo_entidade to entidade**: many_to_one
 
 ## Database Diagram
 
@@ -186,13 +270,33 @@ erDiagram
 	rbac_papel }o--|| entidade : references
 	auditoria_evento }o--|| usuario_perfil : references
 	auditoria_evento }o--|| entidade : references
+	dispositivo_perfil }o--|| dispositivo : references
+	dispositivo_perfil }o--|| usuario_perfil : references
+	auditoria_acesso }o--|| usuario : references
+	auditoria_acesso }o--|| usuario_perfil : references
+	entidade }o--|| entidade : references
+	modulo_entidade }o--|| modulo : references
+	modulo_entidade }o--|| entidade : references
 
 	entidade {
 		UUID id
-		VARCHAR(255) nome
+		VARCHAR(255) codigo
+		TEXT nome_social
+		TEXT nome_fantasia
+		VARCHAR(255) cnpj
+		VARCHAR(255) cnes
 		TEXT descricao
 		UUID entidade_id
 		VARCHAR(255) hostname
+		INTEGER limite_tenant
+		INTEGER limite_usuario
+		VARCHAR(255) cor_primaria
+		VARCHAR(255) cor_secundaria
+		VARCHAR(255) cor_terciaria
+		TEXT logo_path
+		TEXT email_conta
+		TEXT email_porta
+		TEXT email_senha
 		BOOLEAN ativo
 		TIMESTAMP created_at
 		UUID created_by
@@ -290,6 +394,33 @@ erDiagram
 		UUID deleted_by
 	}
 
+	dispositivo {
+		UUID id
+		VARCHAR(255) codigo
+		VARCHAR(255) nome
+		TEXT descricao
+		TEXT qr_code
+		BOOLEAN ativo
+		TIMESTAMP created_at
+		UUID created_by
+		TIMESTAMP updated_at
+		UUID updated_by
+		TIMESTAMP deleted_at
+		UUID deleted_by
+	}
+
+	dispositivo_perfil {
+		UUID id
+		UUID perfil_id
+		UUID dispositivo_id
+		TIMESTAMP created_at
+		UUID created_by
+		TIMESTAMP updated_at
+		UUID updated_by
+		TIMESTAMP deleted_at
+		UUID deleted_by
+	}
+
 	auditoria_evento {
 		UUID id
 		VARCHAR(255) tabela
@@ -300,5 +431,26 @@ erDiagram
 		JSONB registro_anterior
 		JSONB registro_novo
 		TIMESTAMP created_at
+	}
+
+	auditoria_acesso {
+		INTEGER id
+		UUID usuario_id
+		UUID perfil_id
+		JSONB user_agent
+		TIMESTAMP created_at
+	}
+
+	modulo_entidade {
+		UUID id
+		UUID modulo_id
+		UUID entidade_id
+		BOOLEAN ativo
+		TIMESTAMP created_at
+		UUID created_by
+		TIMESTAMP updated_at
+		UUID updated_by
+		TIMESTAMP delete_at
+		UUID deleted_by
 	}
 ```
